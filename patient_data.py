@@ -3,6 +3,9 @@ import medi_scores as ms
 """
 Patient data will hold the PatientData class definition and functions
 Each patients data will be set using this class, ensuring scalable and safe operations for the MediScore
+
+I have kept all Get methods for the scores inside the class, this ensures that each score return is also limited by the strict type checks.
+By defining each get_<data_point>_score methods independently, I can have more flexible reporting, debugging and be ready for future functionality.
 """
 
 #Enum  object for on_oxygen value
@@ -29,10 +32,30 @@ class PatientData():
             raise TypeError("Attribute oxygen_sat is not of type int")
         if not isinstance(temp, float):
             raise TypeError("Attribute temp is not of type float")
+        
         self.on_oxygen = on_oxygen
         self.consciousness = consciousness
-        self.resprate = resp_rate
+        self.resp_rate = resp_rate
         self.oxygen_sat = oxygen_sat
         self.temp = round(temp, 1) #Round to one decimal point
 
-
+    #Get functions for all scores
+    def get_on_oxygen_score(self):
+        return ms.on_oxygen_scores(self.on_oxygen)
+    def get_consciousness_score(self):
+        return ms.consciousness_scores(self.consciousness)
+    def get_resp_rate_score(self):
+        return ms.resp_rate_scores(self.resp_rate)
+    def get_oxygen_sat_score(self):
+        return ms.oxygen_sat_scores(self.oxygen_sat, self.on_oxygen)
+    def get_temp_score(self):
+        return ms.temp_scores(self.temp)
+    
+    def get_medi_score(self):
+        return (
+            self.get_on_oxygen_score() +
+            self.get_consciousness_score() +
+            self.get_resp_rate_score() +
+            self.get_oxygen_sat_score() +
+            self.get_temp_score()
+        )
