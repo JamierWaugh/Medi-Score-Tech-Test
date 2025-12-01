@@ -1,4 +1,5 @@
 from enum import IntEnum
+import medi_scores as ms
 """
 Patient data will hold the PatientData class definition and functions
 Each patients data will be set using this class, ensuring scalable and safe operations for the MediScore
@@ -29,9 +30,9 @@ class PatientData():
         if not isinstance(temp, float):
             raise TypeError("Attribute temp is not of type float")
         self.on_oxygen = on_oxygen
+        self.consciousness = consciousness
         self.resprate = resp_rate
         self.oxygen_sat = oxygen_sat
-        self.consciousness = consciousness
         self.temp = round(temp, 1) #Round to one decimal point
 
 
