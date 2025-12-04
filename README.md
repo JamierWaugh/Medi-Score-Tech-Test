@@ -16,3 +16,6 @@ Each scoring system should contain checks for any scoring outcome, but if not it
 
 ## Test Data
 I have gathered test data from the official examples given by AireLogic. By comparing expected output and actual output, I can assess whether or not the system is functional. I have tried to ensure the test system is scalable by not hardcoding test calls but instead relying on a loop through a list of tests.
+
+## Extension 1: Flag checks for rapidly changing score
+For the first extension, I have chosen to implement a "prior_list", a small data structure to act as historical data for the patient's scores. This list is set at default to [] but can have a list passed into it as a parameter. This prior_list can then be queried when a new score is calculated in order to see whether the score has changed by more than 2 points in less than 24 hours. If it has changed rapidly, it will produce an alert message in the terminal and return a 1 flag, where the system could be further developed to provide more functionality with this. If no flag occurs a 0 is returned. I am using the datetime library to get the current time and I am hardcoding timedeltas into the test data in order to simulate older data in the list.
