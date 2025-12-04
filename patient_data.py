@@ -20,7 +20,7 @@ class Consciousness(IntEnum):
     CVPU = 1
 
 class PatientData():
-    def __init__(self, on_oxygen, consciousness, resp_rate, oxygen_sat,  temp, prior_list=[] ):
+    def __init__(self, on_oxygen, consciousness, resp_rate, oxygen_sat,  temp, CBG, last_meal_time, prior_list=[] ):
         
         #Enforce types of each value
         
@@ -34,16 +34,22 @@ class PatientData():
             raise TypeError("Attribute oxygen_sat is not of type int")
         if not isinstance(temp, float):
             raise TypeError("Attribute temp is not of type float")
+        if not isinstance(CBG, float):
+            raise TypeError("Attribute CBG is not of type float")
+        if not isinstance(last_meal_time, datetime):
+            raise TypeError("Attribute last_meal_time is not of type datetime")
         if not isinstance(prior_list, list):
             raise TypeError("Attribute prior_list is not of type List")
         
         self.current_score = None
-        self.prior_list = prior_list
         self.on_oxygen = on_oxygen
         self.consciousness = consciousness
         self.resp_rate = resp_rate
         self.oxygen_sat = oxygen_sat
         self.temp = round(temp, 1) #Round to one decimal point
+        self.CBG = round(CBG, 1)
+        self.last_meal_time = last_meal_time
+        self.prior_list = prior_list
 
     #Get functions for all scores
     def get_on_oxygen_score(self):
@@ -56,13 +62,16 @@ class PatientData():
         return ms.oxygen_sat_scores(self.oxygen_sat, self.on_oxygen)
     def get_temp_score(self):
         return ms.temp_scores(self.temp)
+    def get_cbg_score(self):
+        return ms.cbg_scores(self.CBG, self.last_meal_time)
     
     def get_medi_score(self):
         return ( self.get_on_oxygen_score() +
             self.get_consciousness_score() +
             self.get_resp_rate_score() +
             self.get_oxygen_sat_score() +
-            self.get_temp_score()
+            self.get_temp_score() +
+            self.get_cbg_score()
         )
     
     #Sets the patient score and updates the prior list, also returns a flag dictating whether score has increased by more than 2 in last 24 hours

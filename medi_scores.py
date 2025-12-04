@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 """
 Defining all scoring systems in medi_scores file.
 Allows class to dynamically call and assess individual values to compute overall medi score.
@@ -43,7 +45,7 @@ def oxygen_sat_scores(oxygen_sat, on_oxygen):
     if (oxygen_sat >= 88 and oxygen_sat <= 92) or (oxygen_sat >= 93 and on_oxygen == 0):
         return 0
     else:
-        raise RuntimeError("Paramters oxygen_sat or on_oxygen did not contian the correct values")
+        raise RuntimeError("Paramters oxygen_sat or on_oxygen did not contain the correct values")
     
 def temp_scores(temp):
     if temp <= 35.0:
@@ -56,3 +58,23 @@ def temp_scores(temp):
         return 0
     else:
         raise RuntimeError("Parameter temp did not contain the correct values")
+    
+def cbg_scores(CBG, last_meal_time):
+    #If last meal was less than 2 hours ago
+    if datetime.now() - last_meal_time <= timedelta(hours=2):
+        if CBG <= 4.5 or CBG >= 9.0:
+            return 3
+        if (CBG >= 4.5 and CBG <= 5.8) or (CBG >= 7.9 and CBG <= 8.9):
+            return 2
+        if CBG >= 5.9 and CBG <= 7.8:
+            return 0 
+    #If last meal was later than 2 hours ago (fasting phase)
+    else:
+        if CBG <= 3.4 or CBG >= 6.0:
+            return 3
+        if (CBG >= 3.5 and CBG <= 3.9) or (CBG >= 5.5 and CBG <= 5.9):
+            return 2
+        if CBG >= 4.0 and CBG <= 5.4:
+            return 0
+
+
